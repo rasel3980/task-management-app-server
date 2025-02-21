@@ -22,6 +22,24 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const usersCollection = client.db("Task_Management").collection("users");
+    // const  = .collection('users')
+    app.post('/user/:email', async (req, res) => {
+        const email = req.params.email
+        const query = { email }
+        const user = req.body
+        const isExist = await usersCollection.findOne(query)
+        if (isExist) {
+          return res.send(isExist)
+        }
+        const result = await usersCollection.insertOne({
+          ...user,
+          timestamp: Date.now(),
+        })
+        res.send(result)
+        // console.log(result);
+      })
+  
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
